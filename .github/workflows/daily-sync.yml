@@ -1,0 +1,114 @@
+name: Daily Sync
+on:
+  schedule:
+    # 10:00 IST (04:30 UTC)
+    - cron: "30 4 * * *"
+    # 19:00 IST (13:30 UTC)
+    - cron: "30 13 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+env:
+  UPSTREAM_URL: https://github.com/Debanshu777/XCalendar.git
+  UPSTREAM_BRANCH: main
+
+jobs:
+  drip:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read progress
+        id: progress
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ ! -f progress.txt ]]; then
+            echo "0" > progress.txt
+          fi
+          echo "idx=$(cat progress.txt | tr -d '[:space:]')" >> "$GITHUB_OUTPUT"
+
+      - name: Get next commit
+        id: next
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ ! -f commits.txt ]]; then
+            echo "commits.txt missing" >&2
+            exit 1
+          fi
+          total=$(wc -l < commits.txt | tr -d '[:space:]')
+          idx=${{ steps.progress.outputs.idx }}
+          if [[ -z "$idx" ]]; then idx=0; fi
+          if (( idx >= total )); then
+            echo "done=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          sha=$(sed -n "$((idx+1))p" commits.txt)
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+
+      - name: Exit if done
+        if: steps.next.outputs.done == 'true'
+        run: echo "All commits already replayed."
+
+      - name: Prepare upstream objects locally
+        if: steps.next.outputs.done != 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git remote add upstream "$UPSTREAM_URL" || true
+          git fetch --no-tags upstream ${{ steps.next.outputs.sha }} --depth=1
+
+      - name: Apply tree of upstream commit into working dir (preserve .github & helper files)
+        if: steps.next.outputs.done != 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          sha=${{ steps.next.outputs.sha }}
+
+          # Clean working tree except .git, .github, commits.txt, progress.txt
+          find . -mindepth 1 -maxdepth 1 \
+            ! -name ".git" \
+            ! -name ".github" \
+            ! -name "commits.txt" \
+            ! -name "progress.txt" \
+            -exec rm -rf {} +
+
+          git checkout "$sha" -- .
+
+      - name: Get original commit message
+        if: steps.next.outputs.done != 'true'
+        id: msg
+        shell: bash
+        run: |
+          sha=${{ steps.next.outputs.sha }}
+          msg="$(git --no-pager log -1 --pretty=%B "$sha")"
+          printf '%s\n' "$msg" > .commitmsg.txt
+
+      - name: Commit snapshot
+        if: steps.next.outputs.done != 'true'
+        shell: bash
+        run: |
+          git config user.name "${{ github.repository_owner }}"
+          git config user.email "${{ github.repository_owner }}@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit for this SHA; skipping."
+          else
+            git commit -F .commitmsg.txt
+          fi
+
+      - name: Update progress
+        if: steps.next.outputs.done != 'true'
+        shell: bash
+        run: |
+          idx=${{ steps.progress.outputs.idx }}
+          echo $((idx+1)) > progress.txt
+          git add progress.txt
+          git commit -m "progress $((idx+1))" || echo "progress unchanged"
+
+      - name: Push
+        if: steps.next.outputs.done != 'true'
+        run: git push origin HEAD:main
