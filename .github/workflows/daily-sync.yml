@@ -11,8 +11,8 @@ permissions:
   contents: write
 
 env:
-  UPSTREAM_OWNER: Debanshu777
-  UPSTREAM_REPO: XCalendar
+  UPSTREAM_URL: https://github.com/Debanshu777/XCalendar.git
+  UPSTREAM_BRANCH: main
 
 jobs:
   drip:
@@ -22,78 +22,93 @@ jobs:
 
       - name: Read progress
         id: progress
-        run: echo "idx=$(cat progress.txt)" >> $GITHUB_OUTPUT
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ ! -f progress.txt ]]; then
+            echo "0" > progress.txt
+          fi
+          echo "idx=$(cat progress.txt | tr -d '[:space:]')" >> "$GITHUB_OUTPUT"
 
       - name: Get next commit
         id: next
+        shell: bash
         run: |
-          total=$(wc -l < commits.txt | tr -d ' ')
+          set -euo pipefail
+          total=$(wc -l < commits.txt | tr -d '[:space:]')
           idx=${{ steps.progress.outputs.idx }}
-          if [ "$idx" -ge "$total" ]; then
-            echo "done=true" >> $GITHUB_OUTPUT
+          if [[ -z "$idx" ]]; then idx=0; fi
+          if (( idx >= total )); then
+            echo "done=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           sha=$(sed -n "$((idx+1))p" commits.txt)
-          echo "sha=$sha" >> $GITHUB_OUTPUT
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
 
       - name: Exit if done
         if: steps.next.outputs.done == 'true'
         run: echo "All commits already replayed."
 
-      - name: Download upstream snapshot (tarball)
+      - name: Prepare upstream objects locally
         if: steps.next.outputs.done != 'true'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SHA: ${{ steps.next.outputs.sha }}
+        shell: bash
         run: |
           set -euo pipefail
-          rm -rf snapshot.tar.gz
-          curl -sSL -H "Authorization: Bearer ${GH_TOKEN}" \
-               -H "Accept: application/vnd.github+json" \
-               "https://api.github.com/repos/${UPSTREAM_OWNER}/${UPSTREAM_REPO}/tarball/${SHA}" \
-               -o snapshot.tar.gz
+          # Add/fetch upstream so we have the commit object locally
+          git remote add upstream "$UPSTREAM_URL" || true
+          # Fetch the specific commit object (works even if histories are unrelated)
+          git fetch --no-tags upstream ${{ steps.next.outputs.sha }} --depth=1
 
-          # Clean repo and extract tarball into current dir (strip the top-level folder)
-          rm -rf ./* .[^.]* 2>/dev/null || true
-          tar -xzf snapshot.tar.gz --strip-components=1
-          rm -f snapshot.tar.gz
+      - name: Apply tree of upstream commit into working dir
+        if: steps.next.outputs.done != 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          sha=${{ steps.next.outputs.sha }}
 
+          # Clean working tree except .git
+          find . -mindepth 1 -maxdepth 1 ! -name ".git" -exec rm -rf {} +
+
+          # Restore files from the fetched commit into working tree (does not move HEAD)
+          git checkout "$sha" -- .
+
+          # Remove any .gitignore-excluded files that didn't restore (optional safety)
+          git status --porcelain
 
       - name: Get original commit message
         if: steps.next.outputs.done != 'true'
         id: msg
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SHA: ${{ steps.next.outputs.sha }}
+        shell: bash
         run: |
           set -euo pipefail
-          commit_json=$(curl -sSL -H "Authorization: Bearer ${GH_TOKEN}" \
-            "https://api.github.com/repos/${UPSTREAM_OWNER}/${UPSTREAM_REPO}/commits/${SHA}")
-          msg=$(python3 - <<'PY'
-          import sys, json
-          data=json.load(sys.stdin)
-          print(data["commit"]["message"])
-          PY
-          <<<"$commit_json")
+          sha=${{ steps.next.outputs.sha }}
+          msg="$(git --no-pager log -1 --pretty=%B "$sha")"
           printf '%s\n' "$msg" > .commitmsg.txt
 
       - name: Commit snapshot
         if: steps.next.outputs.done != 'true'
-        env:
-          AUTHOR: ${{ github.repository_owner }}
+        shell: bash
         run: |
-          git config user.name "${AUTHOR}"
-          git config user.email "${AUTHOR}@users.noreply.github.com"
+          set -euo pipefail
+          git config user.name "${{ github.repository_owner }}"
+          git config user.email "${{ github.repository_owner }}@users.noreply.github.com"
           git add -A
-          git commit -F .commitmsg.txt
+          # In case the upstream commit didn't change files relative to previous snapshot
+          if git diff --cached --quiet; then
+            echo "No changes to commit for this SHA; skipping."
+          else
+            git commit -F .commitmsg.txt
+          fi
 
       - name: Update progress
         if: steps.next.outputs.done != 'true'
+        shell: bash
         run: |
+          set -euo pipefail
           idx=${{ steps.progress.outputs.idx }}
           echo $((idx+1)) > progress.txt
           git add progress.txt
-          git commit -m "progress $((idx+1))"
+          git commit -m "progress $((idx+1))" || echo "progress unchanged"
 
       - name: Push
         if: steps.next.outputs.done != 'true'
