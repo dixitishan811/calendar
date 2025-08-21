@@ -1,0 +1,69 @@
+name: Daily Sync
+on:
+  schedule:
+    # Run at 10:00 IST (04:30 UTC)
+    - cron: "30 4 * * *"
+    # Run at 19:00 IST (13:30 UTC)
+    - cron: "30 13 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  drip:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read progress
+        id: progress
+        run: echo "idx=$(cat progress.txt)" >> $GITHUB_OUTPUT
+
+      - name: Get next commit
+        id: next
+        run: |
+          total=$(wc -l < commits.txt)
+          idx=${{ steps.progress.outputs.idx }}
+          if [ "$idx" -ge "$total" ]; then
+            echo "done=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          sha=$(sed -n "$((idx+1))p" commits.txt)
+          echo "sha=$sha" >> $GITHUB_OUTPUT
+
+      - name: Exit if done
+        if: steps.next.outputs.done == 'true'
+        run: echo "All commits already replayed."
+
+      - name: Apply tree of the upstream commit
+        if: steps.next.outputs.done != 'true'
+        run: |
+          sha=${{ steps.next.outputs.sha }}
+          rm -rf ./* .[^.]* || true
+          git archive 
+--remote=https://github.com/Debanshu777/XCalendar.git "$sha" | tar -x
+          msg=$(git log --no-show-signature -1 --pretty=%B "$sha" \
+                https://github.com/Debanshu777/XCalendar.git)
+          GIT_AUTHOR_NAME="${{ github.repository_owner }}" \
+          GIT_AUTHOR_EMAIL="${{ github.repository_owner 
+}}@users.noreply.github.com" \
+          GIT_COMMITTER_NAME="${{ github.repository_owner }}" \
+          GIT_COMMITTER_EMAIL="${{ github.repository_owner 
+}}@users.noreply.github.com" \
+          bash -c 'git add -A && git commit -m "$0"' "$msg"
+
+      - name: Update progress
+        if: steps.next.outputs.done != 'true'
+        run: |
+          idx=${{ steps.progress.outputs.idx }}
+          echo $((idx+1)) > progress.txt
+          git add progress.txt
+          git commit -m "progress $((idx+1))"
+
+      - name: Push
+        if: steps.next.outputs.done != 'true'
+        uses: ad-m/github-push-action@v0.8.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
