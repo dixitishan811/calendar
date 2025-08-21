@@ -40,27 +40,24 @@ jobs:
         if: steps.next.outputs.done == 'true'
         run: echo "All commits already replayed."
 
-      - name: Download upstream snapshot (zipball)
+      - name: Download upstream snapshot (tarball)
         if: steps.next.outputs.done != 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SHA: ${{ steps.next.outputs.sha }}
         run: |
           set -euo pipefail
-          rm -rf snapshot snapshot.zip
+          rm -rf snapshot.tar.gz
           curl -sSL -H "Authorization: Bearer ${GH_TOKEN}" \
                -H "Accept: application/vnd.github+json" \
-               "https://api.github.com/repos/${UPSTREAM_OWNER}/${UPSTREAM_REPO}/zipball/${SHA}" \
-               -o snapshot.zip
-          unzip -q snapshot.zip -d snapshot
-          inner=$(find snapshot -mindepth 1 -maxdepth 1 -type d | head -n1)
+               "https://api.github.com/repos/${UPSTREAM_OWNER}/${UPSTREAM_REPO}/tarball/${SHA}" \
+               -o snapshot.tar.gz
 
-          # Clean repo and move files in
+          # Clean repo and extract tarball into current dir (strip the top-level folder)
           rm -rf ./* .[^.]* 2>/dev/null || true
-          shopt -s dotglob
-          mv "$inner"/* .
-          shopt -u dotglob
-          rm -rf snapshot snapshot.zip
+          tar -xzf snapshot.tar.gz --strip-components=1
+          rm -f snapshot.tar.gz
+
 
       - name: Get original commit message
         if: steps.next.outputs.done != 'true'
