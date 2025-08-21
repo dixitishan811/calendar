@@ -1,14 +1,18 @@
 name: Daily Sync
 on:
   schedule:
-    # Run at 10:00 IST (04:30 UTC)
+    # 10:00 IST (04:30 UTC)
     - cron: "30 4 * * *"
-    # Run at 19:00 IST (13:30 UTC)
+    # 19:00 IST (13:30 UTC)
     - cron: "30 13 * * *"
   workflow_dispatch: {}
 
 permissions:
   contents: write
+
+env:
+  UPSTREAM_OWNER: Debanshu777
+  UPSTREAM_REPO: XCalendar
 
 jobs:
   drip:
@@ -23,7 +27,7 @@ jobs:
       - name: Get next commit
         id: next
         run: |
-          total=$(wc -l < commits.txt)
+          total=$(wc -l < commits.txt | tr -d ' ')
           idx=${{ steps.progress.outputs.idx }}
           if [ "$idx" -ge "$total" ]; then
             echo "done=true" >> $GITHUB_OUTPUT
@@ -36,22 +40,55 @@ jobs:
         if: steps.next.outputs.done == 'true'
         run: echo "All commits already replayed."
 
-      - name: Apply tree of the upstream commit
+      - name: Download upstream snapshot (zipball)
         if: steps.next.outputs.done != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SHA: ${{ steps.next.outputs.sha }}
         run: |
-          sha=${{ steps.next.outputs.sha }}
-          rm -rf ./* .[^.]* || true
-          git archive 
---remote=https://github.com/Debanshu777/XCalendar.git "$sha" | tar -x
-          msg=$(git log --no-show-signature -1 --pretty=%B "$sha" \
-                https://github.com/Debanshu777/XCalendar.git)
-          GIT_AUTHOR_NAME="${{ github.repository_owner }}" \
-          GIT_AUTHOR_EMAIL="${{ github.repository_owner 
-}}@users.noreply.github.com" \
-          GIT_COMMITTER_NAME="${{ github.repository_owner }}" \
-          GIT_COMMITTER_EMAIL="${{ github.repository_owner 
-}}@users.noreply.github.com" \
-          bash -c 'git add -A && git commit -m "$0"' "$msg"
+          set -euo pipefail
+          rm -rf snapshot snapshot.zip
+          curl -sSL -H "Authorization: Bearer ${GH_TOKEN}" \
+               -H "Accept: application/vnd.github+json" \
+               "https://api.github.com/repos/${UPSTREAM_OWNER}/${UPSTREAM_REPO}/zipball/${SHA}" \
+               -o snapshot.zip
+          unzip -q snapshot.zip -d snapshot
+          inner=$(find snapshot -mindepth 1 -maxdepth 1 -type d | head -n1)
+
+          # Clean repo and move files in
+          rm -rf ./* .[^.]* 2>/dev/null || true
+          shopt -s dotglob
+          mv "$inner"/* .
+          shopt -u dotglob
+          rm -rf snapshot snapshot.zip
+
+      - name: Get original commit message
+        if: steps.next.outputs.done != 'true'
+        id: msg
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SHA: ${{ steps.next.outputs.sha }}
+        run: |
+          set -euo pipefail
+          commit_json=$(curl -sSL -H "Authorization: Bearer ${GH_TOKEN}" \
+            "https://api.github.com/repos/${UPSTREAM_OWNER}/${UPSTREAM_REPO}/commits/${SHA}")
+          msg=$(python3 - <<'PY'
+          import sys, json
+          data=json.load(sys.stdin)
+          print(data["commit"]["message"])
+          PY
+          <<<"$commit_json")
+          printf '%s\n' "$msg" > .commitmsg.txt
+
+      - name: Commit snapshot
+        if: steps.next.outputs.done != 'true'
+        env:
+          AUTHOR: ${{ github.repository_owner }}
+        run: |
+          git config user.name "${AUTHOR}"
+          git config user.email "${AUTHOR}@users.noreply.github.com"
+          git add -A
+          git commit -F .commitmsg.txt
 
       - name: Update progress
         if: steps.next.outputs.done != 'true'
@@ -63,7 +100,4 @@ jobs:
 
       - name: Push
         if: steps.next.outputs.done != 'true'
-        uses: ad-m/github-push-action@v0.8.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-
+        run: git push origin HEAD:main
