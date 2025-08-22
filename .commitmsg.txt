@@ -1,11 +1,3 @@
+Merge pull request #1 from Debanshu777/imgbot
+
 [ImgBot] Optimize images
-
-*Total -- 92.15kb -> 44.75kb (51.44%)
-
-/iosApp/iosApp/Assets.xcassets/AppIcon.appiconset/app-icon-1024.png -- 65.71kb -> 19.80kb (69.86%)
-/composeApp/src/androidMain/res/mipmap-xxxhdpi/ic_launcher.png -- 10.40kb -> 9.54kb (8.33%)
-/composeApp/src/androidMain/res/mipmap-xxhdpi/ic_launcher.png -- 7.72kb -> 7.27kb (5.88%)
-/composeApp/src/androidMain/res/mipmap-hdpi/ic_launcher.png -- 3.51kb -> 3.43kb (2.14%)
-/composeApp/src/androidMain/res/mipmap-xhdpi/ic_launcher.png -- 4.81kb -> 4.71kb (2.07%)
-
-Signed-off-by: ImgBotApp <ImgBotHelp@gmail.com>
