@@ -1,1 +1,1 @@
-feat: implement calendar and event management with API integration
+feat: add Koin dependency injection setup and implement database components for iOS and Android
