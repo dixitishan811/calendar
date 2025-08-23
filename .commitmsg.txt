@@ -1,3 +1,1 @@
-Merge pull request #1 from Debanshu777/imgbot
-
-[ImgBot] Optimize images
+feat: implement calendar and event management with API integration
