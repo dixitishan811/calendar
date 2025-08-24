@@ -1,1 +1,1 @@
-feat: add Koin dependency injection setup and implement database components for iOS and Android
+feat: refactor Koin database setup for iOS and Android, update color handling in UI components
