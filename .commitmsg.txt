@@ -1,1 +1,1 @@
-feat: refactor Koin database setup for iOS and Android, update color handling in UI components
+feat: update Koin setup and refactor App structure for improved dependency management
