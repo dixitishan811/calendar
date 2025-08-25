@@ -1,1 +1,1 @@
-feat: add internet permission, refactor App structure, and implement calendar view enhancements
+feat: refactor calendar components, implement TopAppBar and CalendarDrawer, and update state management
