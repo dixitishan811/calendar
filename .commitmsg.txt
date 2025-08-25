@@ -1,1 +1,1 @@
-feat: update Koin setup and refactor App structure for improved dependency management
+feat: add internet permission, refactor App structure, and implement calendar view enhancements
