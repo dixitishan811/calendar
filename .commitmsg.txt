@@ -1,3 +1,1 @@
-Merge pull request #2 from Debanshu777/fix/koin-di
-
-feat: refactor Koin database setup for iOS and Android, update color …
+feat: initialize Koin in MainViewController and remove unused material icons dependency
