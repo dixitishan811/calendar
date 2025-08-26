@@ -1,1 +1,3 @@
-feat: refactor calendar components, implement TopAppBar and CalendarDrawer, and update state management
+Merge pull request #2 from Debanshu777/fix/koin-di
+
+feat: refactor Koin database setup for iOS and Android, update color …
