@@ -1,1 +1,1 @@
-feat: implement MonthView component and refactor calendar layout for improved UI
+feat: add screen dimension extensions for cross-platform support and refactor MonthView layout
