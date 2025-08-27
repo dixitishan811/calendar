@@ -1,1 +1,1 @@
-feat: initialize Koin in MainViewController and remove unused material icons dependency
+feat: implement MonthView component and refactor calendar layout for improved UI
