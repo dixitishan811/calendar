@@ -1,1 +1,1 @@
-feat: implement SwipeableMonthView component and refactor calendar selection logic
+feat: implement DateStateHolder for managing date state and refactor CalendarApp and TopAppBar components
