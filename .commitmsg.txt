@@ -1,1 +1,1 @@
-feat: implement DateStateHolder for managing date state and refactor CalendarApp and TopAppBar components
+feat: refactor date selection logic and improve MonthView component for better state management
