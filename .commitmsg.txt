@@ -1,1 +1,1 @@
-feat: add WeekScreen and SwipeableWeekView components for week view functionality
+feat: enhance week view with SwipeableWeekCalendarView and improved time column
