@@ -1,1 +1,1 @@
-feat: refactor WeekScreen and SwipeableWeekView to improve date handling and styling
+feat: refactor SwipeableMonthView and SwipeableWeekView for improved layout and performance
