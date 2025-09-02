@@ -1,1 +1,1 @@
-feat: refactor SwipeableMonthView and SwipeableWeekView for improved layout and performance
+feat: implement BaseCalendarScreen for day, three-day, and week views
