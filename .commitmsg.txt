@@ -1,1 +1,1 @@
-feat: implement BaseCalendarScreen for day, three-day, and week views
+feat: update TimeColumn layout with improved border thickness and offset adjustments
