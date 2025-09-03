@@ -1,1 +1,1 @@
-feat: update TimeColumn layout with improved border thickness and offset adjustments
+feat: implement AddEventDialog and EventDetailsDialog for event management
