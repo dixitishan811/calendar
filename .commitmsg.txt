@@ -1,1 +1,1 @@
-feat: remove unused date-related methods from YearMonth class
+feat: simplify BaseCalendarScreen by removing getStartDate parameter and updating viewStartDate management
