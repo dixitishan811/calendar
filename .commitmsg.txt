@@ -1,1 +1,1 @@
-feat: implement AddEventDialog and EventDetailsDialog for event management
+feat: remove unused date-related methods from YearMonth class
