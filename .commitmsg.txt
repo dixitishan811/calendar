@@ -1,1 +1,1 @@
-feat: implement ScheduleScreen with dynamic month and week views, including event and holiday display
+feat: update event display with time range formatting and replace Coil with Landscapist for image loading
