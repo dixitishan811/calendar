@@ -1,13 +1,12 @@
-feat: update Gradle Wrapper to 8.11.1 and update dependencies
+feat: refactor ScheduleScreen to use ScheduleState for dynamic loading and state management
 
-This commit updates the Gradle Wrapper version to 8.11.1 and also updates several library dependencies. Key changes include:
+This commit refactors the `ScheduleScreen` to use a new `ScheduleState` class for managing the schedule data and loading more data dynamically as the user scrolls. It also improves the handling of month changes in the TopAppBar. Key changes include:
 
--   Updating the Gradle Wrapper version in `gradle-wrapper.properties` from 8.9 to 8.11.1.
--   Updating the `agp` (Android Gradle Plugin) version in `libs.versions.toml` from 8.6.1 to 8.9.1.
--   Updating the Kotlin version from 2.1.10 to 2.1.20.
--   Updating Compose Multiplatform from 1.8.0-alpha03 to 1.8.0-beta02.
--   Updating Room version from 2.7.0-rc01 to 2.7.0.
-- Updating SQLite version from 2.5.0-rc01 to 2.5.0.
-- Updating Ktor version from 3.1.1 to 3.1.2.
-- Updating Koin version from 4.1.0-Beta5 to 4.1.0-Beta7.
-- Removing redundant room dependencies.
+-   Introducing `ScheduleState` to manage schedule items, pagination, and the initial scroll position.
+-   Using `monthRange` in `ScheduleState` to track the loaded month range.
+-   Creating `loadMoreBackward` and `loadMoreForward` methods in `ScheduleState` to load more items when the user scrolls near the top or bottom.
+-   Using `initialScrollIndex` to determine the initial scroll position in `LazyColumn`.
+-   Updating the `TopAppBar` with the currently visible month using a `snapshotFlow` that observes the first visible month header in the `LazyColumn`.
+-   Removing unnecessary `coroutineScope` and simplifying logic in `ScheduleScreen`.
+- Using constant `THRESHOLD` in `ScheduleState` to control the buffer for loading more content.
+-   Removing unused date-related methods in YearMonth class.
