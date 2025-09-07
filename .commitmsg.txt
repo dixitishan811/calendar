@@ -1,1 +1,8 @@
-feat: Migrated from Material 2 to Material 3
+feat: refine calendar UI, update typography, and enhance TopAppBar
+
+This commit refines the calendar UI by updating the typography, enhancing the TopAppBar, and making other visual improvements. Key changes include:
+
+-   Updating `Typography`: Removed unused code and simplified the `Typography` object.
+-   Enhancing `TopAppBar`: Improved `TopAppBar` by updating colors, adding an image, and refining day-view cell UI.
+-   Updating `ColorScheme`: Cleaned up `ColorScheme` by removing unused comments.
+-   Refining `CalenderDrawer`: Improved `CalenderDrawer` by removing a hardcoded color.
