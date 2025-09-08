@@ -1,16 +1,38 @@
-feat: enhance date and view management, and refine UI components
+feat: enhance DayScreen and ThreeDayScreen with date click functionality and improve UI elements
 
-This commit includes several enhancements and refinements to date and view management, along with UI improvements. Key changes are:
+This commit introduces enhancements to `DayScreen` and `ThreeDayScreen` to support date click actions, refactors UI elements, and updates various dependencies. Key changes include:
 
--   **Update View Management**: Modified `updateSelectedDateState` in `DateStateHolder` to consider the `viewType` (MONTH_VIEW, WEEK_VIEW, THREE_DAY_VIEW, ONE_DAY_VIEW) when updating the `viewStartDate`.
--   **Introduce ViewType**: Added `ViewType` enum to differentiate between various calendar views.
--   **Integrate ViewType in Screens**: Incorporated `viewType` in `DayScreen` and `ThreeDayScreen` for proper date updates.
--   **Update CalendarTopAppBar**: Updated `CalendarTopAppBar` to include events and holidays, show year conditionally and to update date based on view type.
--   **Improve BaseCalendarScreen**: Updated `BaseCalendarScreen` to take `viewType` as a parameter and pass it to the `updateSelectedDateState` function.
--   **Refine MonthScreen**: Updated `MonthScreen` to update date based on month view type.
--   **Refine WeekScreen**: Updated `WeekScreen` to set view type.
--   **Update SwipeableCalendarView**: Updated `SwipeableCalendarView` to remove redundant comments.
--   **Refine Theme**: Refined Theme to remove unused imports.
--  **Update Calendar Ui State**: Updated `getOneDayStartDate` in `CalendarUiState`.
--  **Update Calendar Drawer**: Updated `CalendarDrawer` to remove comments.
-- **Refine Event Display**: Updated event display in `SwipeableCalendarView` to remove event alpha.
+-   **Date Click Functionality**:
+    -   Added `onDateClick` callback to `DayScreen` and `ThreeDayScreen`, allowing users to trigger actions when a specific date is clicked.
+    -   Implemented `onDateClick` in `BaseCalendarScreen` to handle date selection updates.
+-    - Update `MonthScreen`, `WeekScreen` to handle `onDateClick`
++    - Updated `MonthScreen` and `WeekScreen` to handle `onDateClick`.
+
+-**UI Refinements:**
+-    -   Enhanced `customBorder` modifier to allow specific border side control, start position, and length customization.
+-    -   Improved `MonthView` grid and day rendering logic for better visual appeal.
+-    -   Updated styling and colors in several components for a more cohesive look.
+-    - Enhanced  `TimeColumn` with custom borders
+-    - Updated current time indicator line in calendar view
+-
+-**Component Refactoring:**
+-    -   Refactored `BaseCalendarScreen` to include date selection logic and better event handling.
+-    -   Updated `TopAppBar` to remove redundant logic and improve event rendering.
+-    -   Removed unnecessary `isSelected` parameter from several rendering functions.
+-    - Update `SwipeableCalendarView` to handle the offsets better.
+-    - Update `SwipeableMonthView` to handle the offsets better.
+-    - Update  `CalendarApp` to have `SharedTransitionScope` for better screen transition.
++   **UI Refinements**:
++       -   Enhanced `customBorder` modifier to allow specific border side control, start position, and length customization.
++       -   Improved `MonthView` grid and day rendering logic for better visual appeal.
++       -   Updated styling and colors in several components for a more cohesive look.
++       - Enhanced  `TimeColumn` with custom borders
++       - Updated current time indicator line in calendar view
++
++   **Component Refactoring**:
++       -   Refactored `BaseCalendarScreen` to include date selection logic and better event handling.
++       -   Updated `TopAppBar` to remove redundant logic and improve event rendering.
++       -   Removed unnecessary `isSelected` parameter from several rendering functions.
++       - Update `SwipeableCalendarView` to handle the offsets better.
++       - Update `SwipeableMonthView` to handle the offsets better.
++       - Update  `CalendarApp` to have `SharedTransitionScope` for better screen transition.
