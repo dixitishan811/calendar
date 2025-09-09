@@ -1,10 +1,12 @@
-feat: enhance calendar UI with background and border adjustments, and improve calendar event data handling
+feat: implement Compose Navigation for Calendar Views
 
-This commit refines the calendar UI by updating background colors and adding borders to enhance visual clarity, and improves event data handling. Key changes include:
+This commit introduces navigation between different calendar views (Month, Week, Day, ThreeDay, Schedule) using Jetpack Compose's Navigation component. Key changes include:
 
--   Adjusted background colors in `MonthView` and `SwipeableCalendarView` to use `XCalendarTheme.colorScheme.onPrimary` and removed redundant surface color, and removed extra background
-- Added a box on top of timeColumn in `BaseCalendarScreen`
--   Implemented custom borders for day cells in `SwipeableCalendarView`, improving the visual separation between days.
-- Updated the `visibleCalendarIds` in `CalendarViewModel` to use the `+=` and `-=` operators for set addition and removal.
--   Renamed `TopAppBar.kt` to `CalendarTopAppBar.kt` for clarity.
-- Updated day cell shape to rectangle if it's not a current day in `SwipeableCalendarView`
+-   **Navigation Implementation:** Added `NavHost` and `composable` functions to manage navigation between calendar views in `App.kt`.
+-   **Navigation Controller:** Utilized `rememberNavController` to control navigation.
+-   **View Navigation:** Integrated `navController.navigate()` to switch between views when a user selects a view or clicks a date/event.
+-   **Dependency Update:** Updated the `navigation-compose` dependency to version 2.9.0-alpha16 in `libs.versions.toml`.
+- **Code Refactoring:** Move every view to its own composable destination.
+- **Code Refactoring:** Update navigation logic.
+-   **Dependency Update:** updated the `androidx-activityCompose` dependency to version 1.10.0-alpha01 in `libs.versions.toml`.
+-   **Dependency Update:** updated the `androidx-lifecycle` dependency to version 2.8.0-alpha01 in `libs.versions.toml`.
