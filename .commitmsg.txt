@@ -1,38 +1,10 @@
-feat: enhance DayScreen and ThreeDayScreen with date click functionality and improve UI elements
+feat: enhance calendar UI with background and border adjustments, and improve calendar event data handling
 
-This commit introduces enhancements to `DayScreen` and `ThreeDayScreen` to support date click actions, refactors UI elements, and updates various dependencies. Key changes include:
+This commit refines the calendar UI by updating background colors and adding borders to enhance visual clarity, and improves event data handling. Key changes include:
 
--   **Date Click Functionality**:
-    -   Added `onDateClick` callback to `DayScreen` and `ThreeDayScreen`, allowing users to trigger actions when a specific date is clicked.
-    -   Implemented `onDateClick` in `BaseCalendarScreen` to handle date selection updates.
--    - Update `MonthScreen`, `WeekScreen` to handle `onDateClick`
-+    - Updated `MonthScreen` and `WeekScreen` to handle `onDateClick`.
-
--**UI Refinements:**
--    -   Enhanced `customBorder` modifier to allow specific border side control, start position, and length customization.
--    -   Improved `MonthView` grid and day rendering logic for better visual appeal.
--    -   Updated styling and colors in several components for a more cohesive look.
--    - Enhanced  `TimeColumn` with custom borders
--    - Updated current time indicator line in calendar view
--
--**Component Refactoring:**
--    -   Refactored `BaseCalendarScreen` to include date selection logic and better event handling.
--    -   Updated `TopAppBar` to remove redundant logic and improve event rendering.
--    -   Removed unnecessary `isSelected` parameter from several rendering functions.
--    - Update `SwipeableCalendarView` to handle the offsets better.
--    - Update `SwipeableMonthView` to handle the offsets better.
--    - Update  `CalendarApp` to have `SharedTransitionScope` for better screen transition.
-+   **UI Refinements**:
-+       -   Enhanced `customBorder` modifier to allow specific border side control, start position, and length customization.
-+       -   Improved `MonthView` grid and day rendering logic for better visual appeal.
-+       -   Updated styling and colors in several components for a more cohesive look.
-+       - Enhanced  `TimeColumn` with custom borders
-+       - Updated current time indicator line in calendar view
-+
-+   **Component Refactoring**:
-+       -   Refactored `BaseCalendarScreen` to include date selection logic and better event handling.
-+       -   Updated `TopAppBar` to remove redundant logic and improve event rendering.
-+       -   Removed unnecessary `isSelected` parameter from several rendering functions.
-+       - Update `SwipeableCalendarView` to handle the offsets better.
-+       - Update `SwipeableMonthView` to handle the offsets better.
-+       - Update  `CalendarApp` to have `SharedTransitionScope` for better screen transition.
+-   Adjusted background colors in `MonthView` and `SwipeableCalendarView` to use `XCalendarTheme.colorScheme.onPrimary` and removed redundant surface color, and removed extra background
+- Added a box on top of timeColumn in `BaseCalendarScreen`
+-   Implemented custom borders for day cells in `SwipeableCalendarView`, improving the visual separation between days.
+- Updated the `visibleCalendarIds` in `CalendarViewModel` to use the `+=` and `-=` operators for set addition and removal.
+-   Renamed `TopAppBar.kt` to `CalendarTopAppBar.kt` for clarity.
+- Updated day cell shape to rectangle if it's not a current day in `SwipeableCalendarView`
