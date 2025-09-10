@@ -1,12 +1,16 @@
-feat: implement Compose Navigation for Calendar Views
+feat: refactor navigation and date management in calendar views
 
-This commit introduces navigation between different calendar views (Month, Week, Day, ThreeDay, Schedule) using Jetpack Compose's Navigation component. Key changes include:
+This commit refactors the navigation and date management in the calendar views, enhancing the overall user experience and code maintainability. Key changes include:
 
--   **Navigation Implementation:** Added `NavHost` and `composable` functions to manage navigation between calendar views in `App.kt`.
--   **Navigation Controller:** Utilized `rememberNavController` to control navigation.
--   **View Navigation:** Integrated `navController.navigate()` to switch between views when a user selects a view or clicks a date/event.
--   **Dependency Update:** Updated the `navigation-compose` dependency to version 2.9.0-alpha16 in `libs.versions.toml`.
-- **Code Refactoring:** Move every view to its own composable destination.
-- **Code Refactoring:** Update navigation logic.
--   **Dependency Update:** updated the `androidx-activityCompose` dependency to version 1.10.0-alpha01 in `libs.versions.toml`.
--   **Dependency Update:** updated the `androidx-lifecycle` dependency to version 2.8.0-alpha01 in `libs.versions.toml`.
+-   Removing `ViewType` from `BaseCalendarScreen` and `DateStateHolder`.
+-   Removing `viewType` from the date update method `updateSelectedDateState` in `DateStateHolder`.
+-   Removing `viewType` in `onDateClick` callback in Month Screen.
+-   Removing `viewType` from `updateSelectedDateState` method call in `BaseCalendarScreen`.
+-   Updating `BaseCalendarScreen` to use `selectedDate` instead of `viewStartDate`.
+-   Introducing a generic `onDateClickCallback` in `BaseCalendarScreen`, `DayScreen`, `ThreeDayScreen`, and `WeekScreen` to replace the specific date-based callback.
+-   Removing the specific date parameter of `onDateClick` in `DayScreen`, `ThreeDayScreen`, and `WeekScreen`.
+-   Updating `App` to use navigation routes for view selection instead of `currentView`.
+-   Updating `CalendarDrawer` to use navigation route strings instead of `CalendarView` enums for view selection.
+- Removing `selectView` method from `CalendarViewModel`.
+- Updating `onDateClick` in `MonthScreen` to only call updateSelectedDateState without providing `viewType`.
+- Removing unused helper methods (`getWeekStartDate`, `get3DayStartDate`, `getOneDayStartDate`) from `CalendarUiState`.
