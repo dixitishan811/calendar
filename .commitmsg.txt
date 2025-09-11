@@ -1,1 +1,18 @@
-feat: Updated the theme moved away from manager theme to generated themes
+feat: refactor holiday and event handling, enhance UI components
+
+This commit refactors the way holidays and events are handled, improves UI components, and fixes minor issues. Key changes include:
+
+-   **Holiday Repository:** Removed unnecessary comments and simplified holiday date range calculation in `HolidayRepository`.
+-   **Event Tag:** Created a new `EventTag` composable for displaying event labels within day cells, enhancing the month view's visual representation of events.
+-   **Event Repository:** Removed unnecessary comments and code from `EventRepository`.
+-   **Month View Refactor:** Moved `MonthView` to the `components` package and removed unused imports and code.
+-   **App:** Changed the drawer shape of the navigation drawer.
+-   **DummyCalendarApiService:** Fixed a potential issue with date handling when fetching events in `DummyCalendarApiService`.
+-   **CalendarTopAppBar:** Removed unused imports and refactor the layout of elements.
+-   **SwipeableMonthView:** Refactored and simplified the code, removing unused imports.
+-   **WeekdayHeader:** Introduced a new `WeekdayHeader` composable, improving the week header display.
+-   **CalendarDrawer:** Fixed icon sizes for better consistency.
+-   **DayCell:** Created a new `DayCell` composable, improving the way days are displayed within the month view. It now includes event labels and more indicators.
+-   **CalendarViewModel:** Refactored the way holidays are handled by using `holidayRepository` and simplified event loading in `loadEventsForCalendars`. Also, added a `Random` function to generate unique ID.
+
+These changes enhance the calendar's functionality, efficiency, and overall user experience.
