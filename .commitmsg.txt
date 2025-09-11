@@ -1,16 +1,1 @@
-feat: refactor navigation and date management in calendar views
-
-This commit refactors the navigation and date management in the calendar views, enhancing the overall user experience and code maintainability. Key changes include:
-
--   Removing `ViewType` from `BaseCalendarScreen` and `DateStateHolder`.
--   Removing `viewType` from the date update method `updateSelectedDateState` in `DateStateHolder`.
--   Removing `viewType` in `onDateClick` callback in Month Screen.
--   Removing `viewType` from `updateSelectedDateState` method call in `BaseCalendarScreen`.
--   Updating `BaseCalendarScreen` to use `selectedDate` instead of `viewStartDate`.
--   Introducing a generic `onDateClickCallback` in `BaseCalendarScreen`, `DayScreen`, `ThreeDayScreen`, and `WeekScreen` to replace the specific date-based callback.
--   Removing the specific date parameter of `onDateClick` in `DayScreen`, `ThreeDayScreen`, and `WeekScreen`.
--   Updating `App` to use navigation routes for view selection instead of `currentView`.
--   Updating `CalendarDrawer` to use navigation route strings instead of `CalendarView` enums for view selection.
-- Removing `selectView` method from `CalendarViewModel`.
-- Updating `onDateClick` in `MonthScreen` to only call updateSelectedDateState without providing `viewType`.
-- Removing unused helper methods (`getWeekStartDate`, `get3DayStartDate`, `getOneDayStartDate`) from `CalendarUiState`.
+feat: Updated the theme moved away from manager theme to generated themes
