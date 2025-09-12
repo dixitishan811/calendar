@@ -1,18 +1,13 @@
-feat: refactor holiday and event handling, enhance UI components
+feat: refactor data layer for local and remote data sources, implement holiday API integration
 
-This commit refactors the way holidays and events are handled, improves UI components, and fixes minor issues. Key changes include:
+This commit refactors the data layer to use separate packages for local and remote data sources and integrates the holiday API. Key changes include:
 
--   **Holiday Repository:** Removed unnecessary comments and simplified holiday date range calculation in `HolidayRepository`.
--   **Event Tag:** Created a new `EventTag` composable for displaying event labels within day cells, enhancing the month view's visual representation of events.
--   **Event Repository:** Removed unnecessary comments and code from `EventRepository`.
--   **Month View Refactor:** Moved `MonthView` to the `components` package and removed unused imports and code.
--   **App:** Changed the drawer shape of the navigation drawer.
--   **DummyCalendarApiService:** Fixed a potential issue with date handling when fetching events in `DummyCalendarApiService`.
--   **CalendarTopAppBar:** Removed unused imports and refactor the layout of elements.
--   **SwipeableMonthView:** Refactored and simplified the code, removing unused imports.
--   **WeekdayHeader:** Introduced a new `WeekdayHeader` composable, improving the week header display.
--   **CalendarDrawer:** Fixed icon sizes for better consistency.
--   **DayCell:** Created a new `DayCell` composable, improving the way days are displayed within the month view. It now includes event labels and more indicators.
--   **CalendarViewModel:** Refactored the way holidays are handled by using `holidayRepository` and simplified event loading in `loadEventsForCalendars`. Also, added a `Random` function to generate unique ID.
-
-These changes enhance the calendar's functionality, efficiency, and overall user experience.
+-   Moving local data entities to `data.localDataSource.model` and updating references.
+-   Introducing remote data source components like `HolidayApiService`, `ClientWrapper`, `Result`, and `DataError`.
+-   Implementing API integration to fetch holiday data from the remote source.
+-   Creating new data models for remote holiday data: `HolidayResponse`, `Holiday`, `Date`, `Datetime`, `Timezone`, `Country`, `Meta`, `Response`.
+-   Updating `CalendarViewModel` to load holidays from the API and store them locally.
+-   Implementing `parseDateTime` function for parsing date and time strings.
+-   Adding `buildkonfig` plugin for API key management and setting Json configuration in di.
+-   Adding new network `Error` classes for better error handling.
+- Update swipeable calendar to take holidays as not null.
