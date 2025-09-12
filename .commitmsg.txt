@@ -1,13 +1,12 @@
-feat: refactor data layer for local and remote data sources, implement holiday API integration
+feat: refactor SwipeableCalendarView to display holidays with EventTag and enhance UI
 
-This commit refactors the data layer to use separate packages for local and remote data sources and integrates the holiday API. Key changes include:
+This commit refactors the `SwipeableCalendarView` component to improve the display of holidays and enhance the overall UI. Key changes include:
 
--   Moving local data entities to `data.localDataSource.model` and updating references.
--   Introducing remote data source components like `HolidayApiService`, `ClientWrapper`, `Result`, and `DataError`.
--   Implementing API integration to fetch holiday data from the remote source.
--   Creating new data models for remote holiday data: `HolidayResponse`, `Holiday`, `Date`, `Datetime`, `Timezone`, `Country`, `Meta`, `Response`.
--   Updating `CalendarViewModel` to load holidays from the API and store them locally.
--   Implementing `parseDateTime` function for parsing date and time strings.
--   Adding `buildkonfig` plugin for API key management and setting Json configuration in di.
--   Adding new network `Error` classes for better error handling.
-- Update swipeable calendar to take holidays as not null.
+-   **Move `EventTag`:** Moved the `EventTag` composable from `monthScreen` to `ui.components` to make it a common UI component.
+-   **Holiday Display:** Implemented holiday display in the day headers using the `EventTag` component.
+-   **Dynamic Header Height:** Introduced dynamic height for the day headers, expanding to accommodate the holiday tag when a day has a holiday.
+-   **Header Height Animation:** Added a smooth animation for the day header height changes when switching between days with and without holidays.
+-   **UI Enhancements:** Improved the visual layout and spacing of the day headers and their content.
+-   **Code Refactor:** Cleaned up and reorganized code for better readability and maintainability.
+- **Minor Bug Fix:** Added `clickable` Modifier inside of `Box` in `DateHeader` Composable to fix click issue.
+- **New Dependency:** Added `androidx.compose.animation:animation` in `libs.versions.toml` to use `animateContentSize` function.
