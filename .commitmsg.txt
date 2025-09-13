@@ -1,16 +1,8 @@
-feat: enhance event and holiday display with dynamic styling and improved UI
+feat: enhance calendar holiday display with expansion and improved animations
 
-This commit introduces several enhancements to the display of events and holidays within the calendar views, focusing on improved styling, dynamic UI adjustments, and better information presentation.
+This commit enhances the display of holidays in the calendar view with the following changes:
 
-Key changes include:
-
--   **EventTag Color Customization**: Introduced a `textColor` parameter in `EventTag` to allow better contrast and readability.
--   **BaseCalendarScreen Header Adjustment**: Implemented dynamic header height adjustment in `BaseCalendarScreen` based on the presence of holidays, using animation for a smoother transition.
--   **SwipeableCalendarView Header Refinement**: Enhanced the header in `SwipeableCalendarView` to display day names and numbers more clearly.
--   **SwipeableCalendarView Holiday Display**: Improved holiday display in `SwipeableCalendarView`, now showing holiday names directly in the header and using `EventTag` for consistent styling.
--   **DayCell Event and Holiday Tags**: Updated `DayCell` to use `EventTag` for consistent styling and improved readability, with correct text color contrast.
-- **SwipeableCalendarView Holiday display**: Now showing multiple holidays and their name correctly in the header.
-- **BaseCalendarScreen Header**: Updated base header to show multiple holiday.
--   **SwipeableCalendarView Holiday display**:Updated holiday tag to show text properly.
--   **SwipeableCalendarView Day Name length**: Now showing day names in 3 letter if `numDays` is less than equal to 3 and showing only 1 letter otherwise.
--   **SwipeableCalendarView Header**: Updated header height to `IntrinsicSize.Min`
+-   **Holiday Tag Limit:** In the compact calendar view, only the first two holidays are now displayed, followed by a "+n more" indicator if more holidays exist.
+-   **Expandable Holiday List:** Added the ability to expand the holiday list in the compact calendar view to show all holidays for a selected day.
+- **Expand/Collapse Action** Added expand and collapse action on the holiday list.
+-   **Improved Animations:** Adjusted the animation properties for the `BaseCalendarScreen`, changing `dampingRatio` to `Spring.DampingRatioHighBouncy` and `stiffness` to `Spring.StiffnessVeryLow` for a more dynamic animation.
