@@ -1,12 +1,16 @@
-feat: refactor SwipeableCalendarView to display holidays with EventTag and enhance UI
+feat: enhance event and holiday display with dynamic styling and improved UI
 
-This commit refactors the `SwipeableCalendarView` component to improve the display of holidays and enhance the overall UI. Key changes include:
+This commit introduces several enhancements to the display of events and holidays within the calendar views, focusing on improved styling, dynamic UI adjustments, and better information presentation.
 
--   **Move `EventTag`:** Moved the `EventTag` composable from `monthScreen` to `ui.components` to make it a common UI component.
--   **Holiday Display:** Implemented holiday display in the day headers using the `EventTag` component.
--   **Dynamic Header Height:** Introduced dynamic height for the day headers, expanding to accommodate the holiday tag when a day has a holiday.
--   **Header Height Animation:** Added a smooth animation for the day header height changes when switching between days with and without holidays.
--   **UI Enhancements:** Improved the visual layout and spacing of the day headers and their content.
--   **Code Refactor:** Cleaned up and reorganized code for better readability and maintainability.
-- **Minor Bug Fix:** Added `clickable` Modifier inside of `Box` in `DateHeader` Composable to fix click issue.
-- **New Dependency:** Added `androidx.compose.animation:animation` in `libs.versions.toml` to use `animateContentSize` function.
+Key changes include:
+
+-   **EventTag Color Customization**: Introduced a `textColor` parameter in `EventTag` to allow better contrast and readability.
+-   **BaseCalendarScreen Header Adjustment**: Implemented dynamic header height adjustment in `BaseCalendarScreen` based on the presence of holidays, using animation for a smoother transition.
+-   **SwipeableCalendarView Header Refinement**: Enhanced the header in `SwipeableCalendarView` to display day names and numbers more clearly.
+-   **SwipeableCalendarView Holiday Display**: Improved holiday display in `SwipeableCalendarView`, now showing holiday names directly in the header and using `EventTag` for consistent styling.
+-   **DayCell Event and Holiday Tags**: Updated `DayCell` to use `EventTag` for consistent styling and improved readability, with correct text color contrast.
+- **SwipeableCalendarView Holiday display**: Now showing multiple holidays and their name correctly in the header.
+- **BaseCalendarScreen Header**: Updated base header to show multiple holiday.
+-   **SwipeableCalendarView Holiday display**:Updated holiday tag to show text properly.
+-   **SwipeableCalendarView Day Name length**: Now showing day names in 3 letter if `numDays` is less than equal to 3 and showing only 1 letter otherwise.
+-   **SwipeableCalendarView Header**: Updated header height to `IntrinsicSize.Min`
