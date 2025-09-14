@@ -1,33 +1,10 @@
-feat: enhance date/time handling, improve time range display, and add state management for ScheduleScreen
+feat: update compile and target SDK versions to 36 and update dependencies
 
-This commit refactors date and time handling across the application, enhances the display of time ranges for events, and introduces robust state management for the `ScheduleScreen`. Key changes include:
+This commit updates the compile and target SDK versions to 36 in `libs.versions.toml`, and also updates several library dependencies. Key changes include:
 
--   **Refactored Date/Time Handling**:
-    -   Removed redundant date-related functions from `YearMonth`.
-    -   Introduced `parseDateTime` to `extensions.kt` for versatile date/time parsing from strings.
-    -   Added `isLeap` extension to `Int` for improved leap year detection.
-
--   **Enhanced Time Range Display**:
-    -   Implemented `formatTimeRange` to `extensions.kt` for clear and concise event time range formatting, replacing previous methods.
-
--   **ScheduleScreen State Management**:
-    -   Introduced `ScheduleStateHolder` to `domain/states/scheduleState/ScheduleStateHolder.kt` to manage `ScheduleScreen`'s state, including scrolling and month/week/day display.
-    -   Added `DateState` and `DateStateHolder` to `domain/states/dateState/` to handle overall date related state.
-    -   Created `ScheduleItem` to `ui/screen/scheduleScreen/ScheduleItem.kt` for handling different item types in `ScheduleScreen`.
-    - Updated `ScheduleScreen` to use `ScheduleStateHolder` for managing schedule state.
-   - Updated `createScheduleItemsForMonthRange` to manage display of month, week and date related data on `ScheduleScreen`.
-
--   **Code Cleanup and Refactoring**:
-    -   Moved `noRippleClickable` and `customBorder` to `modifierExtension.kt`.
-    -   Cleaned up `CalendarUiState` by removing unused methods.
-    -   Refactored `MonthRange` to `ScheduleState` for clarity.
-- Removed unused code like `ViewType` enum.
-- Replaced `DateStateHolderImpl` with `DateStateHolder`.
-- Replaced all old imports with updated imports.
-- Added month range for displaying data on `ScheduleScreen`.
-- Updated `DayWithEvents` to use updated `formatTimeRange`.
-- Updated all relevant classes to use updated `DateStateHolder` and `DateState`.
-- Added logic to update `topAppBar` with current viewed month on `ScheduleScreen`.
-- Replaced `scheduleState` with `scheduleStateHolder` on `ScheduleScreen`.
-- Updated `MonthView` to use updated `isLeap` method.
-- Removed `getWeekStartDate`, `get3DayStartDate`, `getOneDayStartDate` from `CalendarUiState`.
+-   Updating the `agp` (Android Gradle Plugin) version in `libs.versions.toml` from 8.9.1 to 8.9.2.
+-   Updating the `android-compileSdk` from 35 to 36.
+-   Updating the `android-targetSdk` from 35 to 36.
+- Updating Koin version from 4.1.0-Beta7 to 4.1.0-Beta8.
+- Updating Navigation version from 2.9.0-alpha16 to 2.9.0-alpha17.
+- Adding import `org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask` to `build.gradle.kts`.
