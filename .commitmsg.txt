@@ -1,10 +1,12 @@
-feat: update compile and target SDK versions to 36 and update dependencies
+feat: replace DummyCalendarApiService with RemoteCalendarApiService for calendar and event data
 
-This commit updates the compile and target SDK versions to 36 in `libs.versions.toml`, and also updates several library dependencies. Key changes include:
+This commit transitions the application from using a dummy data source to a remote API for fetching calendar and event data. Key changes include:
 
--   Updating the `agp` (Android Gradle Plugin) version in `libs.versions.toml` from 8.9.1 to 8.9.2.
--   Updating the `android-compileSdk` from 35 to 36.
--   Updating the `android-targetSdk` from 35 to 36.
-- Updating Koin version from 4.1.0-Beta7 to 4.1.0-Beta8.
-- Updating Navigation version from 2.9.0-alpha16 to 2.9.0-alpha17.
-- Adding import `org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask` to `build.gradle.kts`.
+-   **Removal of DummyCalendarApiService**: Deleted `DummyCalendarApiService.kt` and `CalendarApiService.kt`, which provided dummy calendar and event data.
+-   **Introduction of RemoteCalendarApiService**: Added `RemoteCalendarApiService.kt`, which uses Ktor's `HttpClient` to interact with the Google Calendar API.
+-   **Integration with ViewModel**: Updated `CalendarViewModel.kt` to utilize `RemoteCalendarApiService` instead of `DummyCalendarApiService` for fetching user calendars and events.
+-  - Now fetch calendars using `fetchCalendarsForUser`
+- - Now fetch events using `fetchEventsForCalendar`
+-   **Error Handling**: Implemented basic error handling in `CalendarViewModel.kt` to log errors when API calls fail.
+- **Data loading**: Added support for loading data in initialisation of Calendar Screen.
+- **User ID**: Fixed user ID to be `user_id` instead of being random.
