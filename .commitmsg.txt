@@ -1,12 +1,11 @@
-feat: replace DummyCalendarApiService with RemoteCalendarApiService for calendar and event data
+refactor: Migrate to common extension functions for model conversions
 
-This commit transitions the application from using a dummy data source to a remote API for fetching calendar and event data. Key changes include:
+This commit introduces common extension functions for converting between domain models and data source models (local and remote).
 
--   **Removal of DummyCalendarApiService**: Deleted `DummyCalendarApiService.kt` and `CalendarApiService.kt`, which provided dummy calendar and event data.
--   **Introduction of RemoteCalendarApiService**: Added `RemoteCalendarApiService.kt`, which uses Ktor's `HttpClient` to interact with the Google Calendar API.
--   **Integration with ViewModel**: Updated `CalendarViewModel.kt` to utilize `RemoteCalendarApiService` instead of `DummyCalendarApiService` for fetching user calendars and events.
--  - Now fetch calendars using `fetchCalendarsForUser`
-- - Now fetch events using `fetchEventsForCalendar`
--   **Error Handling**: Implemented basic error handling in `CalendarViewModel.kt` to log errors when API calls fail.
-- **Data loading**: Added support for loading data in initialisation of Calendar Screen.
-- **User ID**: Fixed user ID to be `user_id` instead of being random.
+- Created `calendarExtension.kt`, `eventExtension.kt`, `holidayExtension.kt`, and `userExtension.kt` in `common/model`.
+- Moved the conversion logic (`toEntity`, `toEvent`, `toCalendar`, `toHoliday`, `asEvent`, `asCalendar`, `asHoliday`, `asUser`) from respective repository classes and remote data source models into these new extension functions.
+- Updated the `EventEntity` with default null values for optional fields (`description`, `location`, `recurringRule`, `color`) for better data model consistency.
+- Adjusted the `ClientWrapper` to use blank catch blocks (`_`) for `UnresolvedAddressException` and `SerializationException` since the exception object is not used.
+- Updated dependencies: `agp` to 8.10.0, `compose-multiplatform` to 1.8.0, `ksp` to 2.1.20-1.0.31, `sqlite` to 2.5.1, `ktor-bom` to 3.1.3, and `navigation` to 2.9.0-beta01.
+- Added the `store` dependency (5.1.0-alpha06).
+- Modified `CalendarViewModel` to use the new extension functions and adjusted the calendar loading logic to prefer local data first.
