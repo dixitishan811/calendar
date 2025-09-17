@@ -1,13 +1,5 @@
-feat: Fetch and store calendars, events, and holidays from remote sources
+refactor: update AddEventDialog and EventRepository for improved event management
 
-This commit introduces the functionality to fetch calendar data (calendars, events, and holidays) from remote API services and store it in the local database.
+This commit refactors the `AddEventDialog` to be used within a `ModalBottomSheet` and removes the `showAddEventDialog` state from `CalendarUiState`. The dialog's save and dismiss logic is now handled externally.
 
-Key changes include:
-
-- Updated `RemoteCalendarApiService` to fetch events based on a list of calendar IDs instead of a single ID.
-- Modified `HolidayRepository` to include a function `updateHolidays` that fetches holidays from `HolidayApiService` and inserts them into the database.
-- Enhanced `EventRepository` with a `getEventsForCalendar` function to fetch events from `RemoteCalendarApiService` and add them to the database.
-- Updated `CalendarRepository` to include `getCalendersForUser` which fetches calendars from `RemoteCalendarApiService` and upserts them into the database. Also changed `upsertCalendar` to accept a list of calendars.
-- Added `asHolidayEntity()` extension function for `HolidayItem` in `holidayExtension.kt` to facilitate mapping from remote DTO to local entity.
-- Modified `CalendarDao`'s `upsertCalendar` to accept a list of `CalendarEntity`.
-- Refactored `CalendarViewModel` to initialize and combine flows for holidays, calendars, and events to manage the UI state. The data fetching logic is now integrated into the repository functions.
+Additionally, the `EventRepository.getEventsForCalendarsInRange` method has been updated to filter events by `userId` instead of a list of `calendarIds`.
