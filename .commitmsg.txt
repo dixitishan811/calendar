@@ -1,5 +1,7 @@
-refactor: update AddEventDialog and EventRepository for improved event management
+fix: rename stringToColor to convertStringToColor and enhance color generation
 
-This commit refactors the `AddEventDialog` to be used within a `ModalBottomSheet` and removes the `showAddEventDialog` state from `CalendarUiState`. The dialog's save and dismiss logic is now handled externally.
+This commit renames the `stringToColor` extension function to `convertStringToColor` for clarity.
 
-Additionally, the `EventRepository.getEventsForCalendarsInRange` method has been updated to filter events by `userId` instead of a list of `calendarIds`.
+Additionally, the color generation logic in `calendarExtension.kt` and `eventExtension.kt` has been improved to use a combination of `id` and `name` (or `calendarId` and `calenderName` for events) to generate more unique colors, reducing the likelihood of color collisions.
+
+The `EventResponseItem`'s `calenderName` property is now nullable to handle potential null values from the data source. The `assets/events.json` file has been updated to reflect this change, ensuring consistency.
