@@ -1,7 +1,6 @@
-fix: rename stringToColor to convertStringToColor and enhance color generation
+fix: correct typo in EventResponseItem and ensure unique color generation
 
-This commit renames the `stringToColor` extension function to `convertStringToColor` for clarity.
+This commit addresses two issues:
 
-Additionally, the color generation logic in `calendarExtension.kt` and `eventExtension.kt` has been improved to use a combination of `id` and `name` (or `calendarId` and `calenderName` for events) to generate more unique colors, reducing the likelihood of color collisions.
-
-The `EventResponseItem`'s `calenderName` property is now nullable to handle potential null values from the data source. The `assets/events.json` file has been updated to reflect this change, ensuring consistency.
+1.  **Typo Correction:** Corrects a typo in the `EventResponseItem` data class, changing `calenderName` to `calendarName` for consistency.
+2.  **Unique Color Generation:** Modifies the `convertStringToColor` function calls in both `calendarExtension.kt` and `eventExtension.kt`. Now, the color generation for calendars uses `id + name`, and for events, it uses `calendarId + calendarName`. This change aims to produce more distinct colors by incorporating more unique identifiers into the string used for color generation.
