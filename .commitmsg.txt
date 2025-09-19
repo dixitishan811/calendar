@@ -1,6 +1,6 @@
-fix: correct typo in EventResponseItem and ensure unique color generation
+refactor: update string to color conversion for lighter, pastel colors
 
-This commit addresses two issues:
+The `convertStringToColor` extension function has been updated to generate lighter, pastel colors from input strings.
 
-1.  **Typo Correction:** Corrects a typo in the `EventResponseItem` data class, changing `calenderName` to `calendarName` for consistency.
-2.  **Unique Color Generation:** Modifies the `convertStringToColor` function calls in both `calendarExtension.kt` and `eventExtension.kt`. Now, the color generation for calendars uses `id + name`, and for events, it uses `calendarId + calendarName`. This change aims to produce more distinct colors by incorporating more unique identifiers into the string used for color generation.
+- If the input string is empty, it now returns a light gray color (0xFFF0F0F0) instead of black.
+- The RGB component calculation now uses a base value of 180 and a modulo of 75 to ensure the generated colors are lighter and fall within a pastel range, improving visual distinction.
