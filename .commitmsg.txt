@@ -1,1 +1,9 @@
-feat: enhance overlapping event view
+refactor: improve CalendarViewModel state management and EventItem UI
+
+This commit introduces two key changes:
+
+1.  **CalendarViewModel State Debouncing:** A `debounce` operator with a 250-millisecond duration has been added to the `combine` flow in `CalendarViewModel`. This prevents rapid, successive UI updates when multiple underlying flows (users, holidays, calendars, events) emit values in quick succession, leading to a smoother user experience.
+
+2.  **EventItem UI Simplification:**
+    *   The calculation for `eventWidth` and `horizontalOffset` in `SwipeableCalendarView` has been removed. Event items will now occupy the full width of the day column.
+    *   The custom drawing logic for overlapping events (diagonal hatching) has been removed from `EventItem`. The visual distinction for overlapping events now relies solely on the alpha value of the background color.
