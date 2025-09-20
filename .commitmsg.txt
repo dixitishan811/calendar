@@ -1,14 +1,1 @@
-refactor: adjust event display for overlapping events in SwipeableCalendarView
-
-This commit updates the `SwipeableCalendarView` to better handle and display overlapping events.
-
-Key changes:
-
--   **Overlapping Event Grouping:** Introduces a `groupOverlappingEvents` helper function to identify and group events that occur at the same time.
--   **Dynamic Event Width and Position:** Events within the same time slot are now dynamically sized and positioned to share the available horizontal space, preventing them from completely obscuring each other. The width of each event is divided by the total number of overlapping events, and they are offset horizontally accordingly.
--   **Visual Differentiation for Overlapping Events:**
-    -   Overlapping events now have a slightly reduced background opacity (0.7f vs 0.9f for non-overlapping).
-    -   A subtle diagonal hatch pattern is drawn behind overlapping events using `drawWithCache` and `onDrawBehind` for improved visual distinction.
-    -   A 1dp border with the event's color is added to all events.
--   **Text Styling:** The event title text color is now set to `XCalendarTheme.colorScheme.inverseOnSurface` for better contrast.
--   The `fontSize` for the event title was removed, relying on the `XCalendarTheme.typography.labelSmall` style.
+feat: enhance overlapping event view
