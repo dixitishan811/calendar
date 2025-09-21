@@ -1,9 +1,21 @@
-refactor: improve CalendarViewModel state management and EventItem UI
+refactor: optimize CalendarViewModel and improve UI state management
 
-This commit introduces two key changes:
+This commit introduces several optimizations and improvements to the `CalendarViewModel` and related UI components.
 
-1.  **CalendarViewModel State Debouncing:** A `debounce` operator with a 250-millisecond duration has been added to the `combine` flow in `CalendarViewModel`. This prevents rapid, successive UI updates when multiple underlying flows (users, holidays, calendars, events) emit values in quick succession, leading to a smoother user experience.
+**Key changes:**
 
-2.  **EventItem UI Simplification:**
-    *   The calculation for `eventWidth` and `horizontalOffset` in `SwipeableCalendarView` has been removed. Event items will now occupy the full width of the day column.
-    *   The custom drawing logic for overlapping events (diagonal hatching) has been removed from `EventItem`. The visual distinction for overlapping events now relies solely on the alpha value of the background color.
+-   **ViewModel Optimization:**
+    -   Data fetching (users, holidays, calendars, events) is now initialized concurrently using `async` and `awaitAll` for faster loading.
+    -   Cached data flows (`shareIn`) are used for users, holidays, calendars, and events to improve performance and reduce redundant fetches.
+    -   Error handling is improved with `catch` operators on flows and `runCatching` for suspend functions, updating the UI state with error messages.
+    -   The `uiState` flow now uses `distinctUntilChanged()` and a `debounce(50)` to prevent rapid successive emissions and improve UI responsiveness.
+    -   An `AtomicBoolean` (`_isInitialized`) ensures data initialization happens only once.
+    -   State update methods (`updateState`, `updateLoadingState`) and event operation helpers (`performEventOperation`) are introduced for cleaner and more robust state management.
+    -   `onCleared` now resets the `_isInitialized` flag.
+-   **CalendarUiState Enhancement:**
+    -   Added `isLoading` and `errorMessage` properties to `CalendarUiState` to provide more information about the data loading status and potential errors.
+    -   Added `hasError` and `isEmpty` computed properties for convenience.
+-   **Lazy Event/Holiday Passing:**
+    -   `MonthScreen` and `MonthView` (and its swipeable variant) now accept `events` and `holidays` as lambda functions (`() -> List<Event>`, `() -> List<Holiday>`). This defers the filtering and access of these lists until they are actually needed by the composables, potentially improving performance by avoiding unnecessary list operations during recomposition if the lists themselves haven't changed.
+
+These changes aim to make the calendar data loading more efficient, error handling more robust, and UI updates smoother.
