@@ -1,36 +1,11 @@
-refactor: update dependencies and use `kotlin.time.Clock`
+refactor: remove SharedTransitionLayout and update HolidayRepository data fetching
 
-This commit updates several dependencies to their latest versions and replaces usages of `kotlinx.datetime.Clock` with `kotlin.time.Clock`. Additionally, it introduces performance optimizations in `SwipeableMonthView`.
+This commit introduces two main changes:
 
-**Key changes:**
+1.  **SharedTransitionLayout Removal:**
+    *   The `LocalSharedTransitionScope` composition local and the `SharedTransitionLayout` wrapper around the `NavHost` in `App.kt` have been removed. This simplifies the navigation setup and removes dependencies on `ExperimentalSharedTransitionApi`.
 
--   **Dependency Updates:**
-    -   AGP: `8.10.0` -> `8.12.0`
-    -   AndroidX Lifecycle: `2.8.4` -> `2.9.1`
-    -   Coil3: `2.4.7` -> `2.5.1`
-    -   Compose Multiplatform: `1.8.0` -> `1.8.2`
-    -   Kotlin: `2.1.20` -> `2.2.0`
-    -   Room: `2.7.1` -> `2.7.2`
-    -   KSP: `2.1.20-1.0.31` (kotlin version updated)
-    -   SQLite: `2.5.1` -> `2.5.2`
-    -   Ktor BOM: `3.1.3` -> `3.2.3`
-    -   Koin BOM: `4.1.0-Beta8` -> `4.1.0`
-    -   Koin Annotations BOM: `2.0.0` -> `2.1.0`
-    -   Kotlinx Datetime: `0.6.2` -> `0.7.1`
-    -   Navigation: `2.9.0-beta01` -> `2.9.0-beta04`
-    -   Material Kolor: `2.1.1` -> `3.0.1`
-    -   Gradle Wrapper: `8.11.1` -> `8.13`
--   **Clock Usage:**
-    -   Replaced `kotlinx.datetime.Clock.System.now()` with `kotlin.time.Clock.System.now()` in `CalendarViewModel`, `DateStateHolder`, `SwipeableCalendarView`, `CalendarTopAppBar`, `DayCell`, `DayWithEvents`, and `WeekdayHeader`.
-    -   Added `@OptIn(ExperimentalTime::class)` where `kotlin.time.Clock` is used.
-    -   Updated `Long.toLocalDateTime` and `parseDateTime` in `extensions.kt` to use `kotlin.time.Instant`.
--   **SwipeableMonthView Optimization:**
-    -   Introduced `SwipeState`, `MonthViewData`, and `MonthData` stable data classes to manage swipe state and month data more efficiently, reducing recompositions.
-    -   Consolidated swipe logic and state management.
-    -   Keyed `pointerInput` on `screenWidth` to reset drag gestures when size changes.
-    -   Added `MonthViewContainer` to handle lazy evaluation of events and holidays.
--   **Minor Code Style and Readability:**
-    -   Corrected parameter name `dayOfMonth` to `day` in `HolidayRepository` when creating `LocalDateTime`.
-    -   Used named parameter `day` in `Datetime.kt` (no actual change, just formatting).
-    -   Minor formatting adjustments in various files (e.g., spacing).
-    -   Changed `TopBarCalendarView.NoView` from `data object` to `object`.
+2.  **HolidayRepository Data Fetching Logic Update:**
+    *   In `HolidayRepository`, the commented-out code for inserting holidays fetched from the remote API into the local DAO has been uncommented. This ensures that fetched holidays are persisted locally.
+    *   In `CalendarViewModel`, the `initializeHolidays` function now first attempts to fetch holidays from the local repository using `holidayRepository.getHolidaysForYear`. If the local data is empty, it then proceeds to fetch from the remote API using `holidayRepository.updateHolidays`.
+    *   The initialization order in `initializeData` has been slightly adjusted, grouping `initializeUsers`, `initializeCalendars`, and `initializeEvents` into one `async` block.
