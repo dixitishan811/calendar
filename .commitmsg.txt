@@ -1,11 +1,45 @@
-refactor: remove SharedTransitionLayout and update HolidayRepository data fetching
+refactor: optimize calendar components and state management
 
-This commit introduces two main changes:
+This commit introduces several performance optimizations and state management improvements across various calendar components.
 
-1.  **SharedTransitionLayout Removal:**
-    *   The `LocalSharedTransitionScope` composition local and the `SharedTransitionLayout` wrapper around the `NavHost` in `App.kt` have been removed. This simplifies the navigation setup and removes dependencies on `ExperimentalSharedTransitionApi`.
+**Key Changes:**
 
-2.  **HolidayRepository Data Fetching Logic Update:**
-    *   In `HolidayRepository`, the commented-out code for inserting holidays fetched from the remote API into the local DAO has been uncommented. This ensures that fetched holidays are persisted locally.
-    *   In `CalendarViewModel`, the `initializeHolidays` function now first attempts to fetch holidays from the local repository using `holidayRepository.getHolidaysForYear`. If the local data is empty, it then proceeds to fetch from the remote API using `holidayRepository.updateHolidays`.
-    *   The initialization order in `initializeData` has been slightly adjusted, grouping `initializeUsers`, `initializeCalendars`, and `initializeEvents` into one `async` block.
+-   **`SwipeableMonthView` & `SwipeableCalendarView` Optimization:**
+    -   Implemented a "sliding window" approach for managing previous, current, and next views (months or date ranges). This minimizes recompositions by only updating the necessary data when the view actually changes due to swiping or external updates.
+    -   State for the sliding window is now more persistent and updated more efficiently.
+    -   Swipe animation duration slightly reduced for a snappier feel.
+    -   Drag threshold for swipe detection made slightly more sensitive.
+    -   `SwipeableMonthView` and `MonthView` within it now have test tags for easier UI testing.
+    -   `onDateClick` callback in `MonthScreen` now takes no arguments as the selected date is managed by `DateStateHolder`.
+    -   `BaseCalendarScreen` now caches event and holiday lists passed to `SwipeableCalendarView`.
+    -   `SwipeableCalendarView` now uses pre-calculated `eventsByDate` and `holidaysByDate` maps passed from `CalendarContent` to avoid repeated filtering. Overlap detection for events is also cached.
+
+-   **`MonthView` Optimization:**
+    -   Events and holidays are now grouped by date using `remember` before being passed to `DayCell` composables. This avoids repeated filtering within each `DayCell`.
+
+-   **`ScheduleScreen` & `ScheduleStateHolder` Optimization:**
+    -   `ScheduleStateHolder` now uses a reduced initial month range for faster startup (7 months vs. 51).
+    -   Introduced caching for event and holiday filtering by date (`eventCache`, `holidayCache`) within `ScheduleStateHolder` to improve performance when generating schedule items.
+    -   `remember` calls for `ScheduleStateHolder` in `ScheduleScreen` now use more stable keys (year, month, list sizes) to prevent unnecessary recreations.
+    -   Combined multiple `LaunchedEffect` blocks in `ScheduleScreen` into one for efficiency.
+    -   Pagination logic optimized with better threshold checking.
+    -   A `CircularProgressIndicator` is now shown if `scheduleStateHolder.items` is empty.
+
+-   **Component-Level Optimizations:**
+    -   `DayWithEvents`: Date calculations (isToday, dayOfWeekText) and event time formatting are now memoized using `remember`.
+    -   `EventItem` (schedule screen): Background and time text colors are pre-calculated using `remember` to avoid repeated alpha calculations.
+    -   `DayCell`: Conditional rendering for holiday and event sections to avoid unnecessary `Spacer` and `items` calls if lists are empty.
+
+-   **General State Management & UI:**
+    -   Domain models (`Calendar`, `Event`, `Holiday`, `User`) are now annotated with `@Stable`.
+    -   `App.kt`:
+        -   Removed unused `SharedTransitionLayout` and `SharedTransitionScope`.
+        -   `visibleCalendars` list is now derived using `derivedStateOf`.
+        -   Simplified `ModalBottomSheet` dismissal.
+        -   `EventDetailsDialog` is shown using `calendarUiState.selectedEvent?.let`.
+        -   `ModalNavigationDrawer` now has a test tag.
+    -   `DayScreen`'s `onDateClickCallback` parameter was removed as it was unused.
+
+-   **Assets:**
+    -   Updated image URLs in `MonthHeader` (schedule screen) to point to images within the project's GitHub repository.
+    -   Added new asset images for each month.
