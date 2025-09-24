@@ -1,8 +1,36 @@
-refactor: code cleanup and minor adjustments
+refactor: enhance AddEventDialog and remove performance utils
 
-This commit includes minor code cleanup and adjustments:
+This commit introduces a significant redesign of the `AddEventDialog` for a more user-friendly experience and removes the no longer used `PerformanceUtils.kt` file.
 
--   **`ScheduleScreen.kt`**: Changed the caught exception variable name from `e` to `_` in a `try-catch` block to indicate it's intentionally unused.
--   **`App.kt`**: Removed an unused import `androidx.compose.ui.semantics.semantics`.
--   **Domain Models (`Holiday.kt`, `Event.kt`)**: Removed trailing commas in data class definitions.
--   **`MonthView.kt` & `ScheduleStateHolder.kt`**: Reordered imports.
+**Key Changes:**
+
+-   **`AddEventDialog` Redesign:**
+    -   **New Layout & Structure:** The dialog now features a more organized layout with sections for title, event type, time/date, calendar selection, location, reminder, and description.
+    -   **Top Bar Actions:** "Cancel" and "Save" actions are now prominently displayed at the top of the dialog.
+    -   **Title Field:** The title field now uses a `TextField` with `headlineSmall` typography and placeholder text.
+    -   **Event Type Selector:** A new `EventTypeSelector` composable allows users to choose between "Event", "Task", "Working location", and "Out of office".
+    -   **Time Section (`CaladerTimeSection`):**
+        -   Includes an "All day" switch.
+        -   Displays selected date and start/end times (or just the date for all-day events).
+        -   `formatTime` utility function added to display time in 12-hour format with AM/PM.
+    -   **Calendar Selection (`CalenderSelectionSection`):**
+        -   Displays the user's avatar and email.
+        -   Presents a `LazyRow` of available calendars, showing their color and name.
+        -   The selected calendar is visually highlighted.
+    -   **Add Location:** An "Add location" option is provided, which reveals an `OutlinedTextField` to enter the location when clicked.
+    -   **Notification Row:** Displays a default reminder time (e.g., "10 minutes before") and an icon to potentially adjust it (functionality not fully implemented in this diff).
+    -   **Add Description:** An "Add description" option is provided (functionality not fully implemented in this diff).
+    -   **Separators:** `HorizontalDivider` is used to visually separate sections.
+    -   **Styling:** Utilizes `XCalendarTheme` for consistent styling.
+    -   **User Prop:** The dialog now accepts a `User` object.
+    -   **Save Logic:** The `onSave` callback now constructs an `Event` object with the selected details (including handling all-day events and reminder minutes) and passes it up.
+    -   **Dismiss Logic:** The `onDismiss` callback is invoked for cancellation.
+-   **`App.kt` Integration:**
+    -   The `AddEventDialog` in the `ModalBottomSheet` is now passed the current `user` from `calendarUiState.accounts`.
+    -   `onSave` and `onDismiss` lambdas are implemented to call `viewModel.addEvent(event)` and hide the bottom sheet respectively.
+-   **Performance Utils Removal:**
+    -   The `PerformanceUtils.kt` file, which contained composables like `RecompositionCounter`, `MeasureCompositionTime`, `rememberLambda`, `LogStateChange`, and `checkStability`, has been deleted as these utilities are no longer in use.
+-   **Build Script:**
+    -   Minor formatting changes in `composeApp/build.gradle.kts`.
+
+**`EventDetailsDialog`:** Minor formatting adjustments were made.
