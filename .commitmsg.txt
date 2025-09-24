@@ -1,51 +1,8 @@
-refactor: optimize performance and stability across calendar components
+refactor: code cleanup and minor adjustments
 
-This commit introduces several performance optimizations and stability improvements across various components of the XCalendar application.
+This commit includes minor code cleanup and adjustments:
 
-**Key Changes:**
-
--   **Performance Utilities (`PerformanceUtils.kt`):**
-    -   Added a new file with utility functions for performance monitoring:
-        -   `RecompositionCounter`: Tracks recomposition counts for composables.
-        -   `MeasureCompositionTime`: Measures composition time for composables.
-        -   `rememberLambda`: Logs lambda creation to identify unstable lambdas.
-        -   `LogStateChange`: Logs state changes for debugging.
-        -   `checkStability`: Checks if a class is marked as `@Stable` or `@Immutable`.
-        -   Includes a checklist of performance best practices and common anti-patterns.
-
--   **`App.kt` (Main Application Setup):**
-    -   Extracted `drawerAccounts` and `drawerCalendars` from `calendarUiState` and remembered them to prevent recompositions of the `CalendarDrawer` when other parts of `calendarUiState` change.
-    -   Made `onViewSelect` and `onCalendarToggle` lambdas in `CalendarDrawer` stable using `remember`.
-    -   Used `remember` with `currentRoute?.destination?.route` to create a `stableRoute` to prevent `CalendarDrawer` recomposition due to navigation state changes.
-    -   In `MonthScreen` composable call:
-        -   Extracted `events` and `holidays` from `calendarUiState`.
-        -   Wrapped `events`, `holidays`, and `onDateClick` in `remember` to provide stable lambda providers, reducing `MonthScreen` recompositions.
-
--   **`CalendarViewModel.kt`:**
-    -   Reduced the `debounce` time for the `uiState` flow from 50ms to 30ms for slightly better responsiveness while still preventing rapid updates.
-    -   Added `distinctUntilChanged()` to individual source flows (`users`, `holidays`, `calendars`, `events`) before the main `combine` operator. This ensures that the `combine` block only re-executes if one of its actual input data flows emits a new distinct value.
-
--   **`MonthScreen.kt`:**
-    -   Made `onSpecificDayClicked` and `onMonthChange` lambdas stable using `remember` to prevent unnecessary recompositions of `SwipeableMonthView`.
-
--   **`ScheduleScreen.kt`:**
-    -   Optimized `scheduleStateHolder` creation by using `rememberUpdatedState` for `events` and `holidays`. The `remember` key for `scheduleStateHolder` now only depends on `currentYearMonth.year` and `currentYearMonth.month`, making it more stable.
-    -   Improved pagination logic:
-        -   Introduced `isPaginatingBackward` and `isPaginatingForward` mutable states to prevent multiple simultaneous pagination requests.
-        -   Adjusted scroll position more accurately after backward pagination to maintain the user's view, using `scrollToItem` with `scrollOffset` and added a small delay.
-        -   Added `contentType` to `LazyColumn.itemsIndexed` for better item type identification and recycling.
-
--   **`MonthView.kt` (Month Screen):**
-    -   Optimized `remember` keys for `eventsByDate` and `holidaysByDate` to depend on `month.year`, `month.month`, and the actual event/holiday lists, reducing recalculations.
-
--   **`DayCell.kt` (Month Screen):**
-    -   Replaced `LazyColumn` with a `Column` modifier with `verticalScroll` for displaying day details (date, holidays, events). This is because the content within a `DayCell` is typically small and `LazyColumn` adds unnecessary overhead for such cases.
-
--   **Domain Models (`Event.kt`, `Holiday.kt`, `YearMonth.kt`):**
-    -   Added `@Immutable` annotation to `Event`, `Holiday`, and `YearMonth` data classes to explicitly mark them as stable for Compose.
-
--   **`BaseCalendarScreen.kt`:**
-    -   Removed redundant `remember` caching for `events` and `holidays` (`cachedEvents`, `cachedHolidays`) as they are already passed as potentially changing lists.
-
--   **`ScheduleStateHolder.kt`:**
-    -   The comment regarding the initial month range was updated to reflect that while the initial range is small for faster load, pagination handles dynamic loading. (No functional code change here).
+-   **`ScheduleScreen.kt`**: Changed the caught exception variable name from `e` to `_` in a `try-catch` block to indicate it's intentionally unused.
+-   **`App.kt`**: Removed an unused import `androidx.compose.ui.semantics.semantics`.
+-   **Domain Models (`Holiday.kt`, `Event.kt`)**: Removed trailing commas in data class definitions.
+-   **`MonthView.kt` & `ScheduleStateHolder.kt`**: Reordered imports.
