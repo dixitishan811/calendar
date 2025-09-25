@@ -1,32 +1,34 @@
-refactor: improve event dialogs and interaction
+docs: update README with detailed project information
 
-This commit introduces significant changes to how event creation and details are displayed, moving them into `ModalBottomSheet` components for a more modern UI feel.
+This commit significantly expands the README.md file to provide a comprehensive overview of the XCalendar project.
 
-**Key Changes:**
+**Key Additions:**
 
--   **Event Creation Dialog (`AddEventDialog`):**
-    -   Now presented within a `ModalBottomSheet` triggered by the Floating Action Button in `App.kt`.
-    -   `onDismiss` in the dialog's header now correctly calls the passed `onDismiss` lambda.
-    -   `MutableInteractionSource` is now used for the title `TextField` to potentially enable more advanced interaction handling in the future.
-
--   **Event Details Dialog (`EventDetailsDialog`):**
-    -   Refactored from an `AlertDialog` to a custom `Column` composable, designed to be shown within a `ModalBottomSheet`.
-    -   The dialog is now triggered when an event is clicked in any calendar view (`MonthScreen`, `DayScreen`, `ThreeDayScreen`, `WeekScreen`) and shows up as a bottom sheet.
-    -   **UI Overhaul:**
-        -   The layout is completely redesigned to match common calendar app aesthetics.
-        -   Includes a close (X) icon and an edit icon in the header row.
-        -   Event color is now displayed as a small colored square next to the title.
-        -   The title is displayed with `FontWeight.Medium`.
-        -   A new `formatEventSubheading` function is introduced to create a more descriptive subheading (e.g., "Friday, 20 Jun 6-7PM" or "Friday, 20 Jun" for all-day events, including recurring information like "Repeat every week").
-        -   Sections for "Join with Google Meet" (placeholder), location (if available), reminder time (placeholder "10 minutes before"), and guest list information (placeholder) are added with icons.
-        -   The event description is now displayed with an icon and proper alignment.
-    -   The "Delete" and "Edit" actions, previously `TextButton`s in the `AlertDialog`, are now handled by the header icons and the `onEdit` and `onDelete` lambdas. The "Close" button is replaced by the header's close icon and the bottom sheet's dismiss behavior.
-
--   **App.kt Integration:**
-    -   `showAddBottomSheet` and `showDetailsBottomSheet` state variables are introduced to control the visibility of the respective bottom sheets.
-    -   Clicking an event in any calendar view now sets the `selectedEvent` in the `viewModel` and sets `showDetailsBottomSheet` to `true`.
-    -   The `FloatingActionButton` now sets `showAddBottomSheet` to `true`.
-    -   `ModalBottomSheet` is used to host both `AddEventDialog` and `EventDetailsDialog`.
-    -   When `EventDetailsDialog` is dismissed or an action (edit/delete) is taken, `showDetailsBottomSheet` is set to `false` and the `selectedEvent` in the `viewModel` is cleared.
-
-These changes provide a more integrated and visually appealing way to manage event interactions within the application.
+-   **Project Introduction:** Added "What is XCalendar?" section.
+-   **Key Features:** Detailed list of features including multiple calendar views, event management, calendar integration, holiday support, and modern UI/UX.
+-   **Architecture & Technical Stack:**
+    -   Listed technology stack (Compose Multiplatform, Kotlin Multiplatform, Room, Koin, Ktor, etc.).
+    -   Provided a project structure overview.
+    -   Described data models (Event, Calendar, User, Holiday).
+    -   Explained data sources (static, dynamic, local, API).
+    -   Highlighted key components (SwipeableCalendarView, BaseCalendarScreen, etc.).
+-   **Getting Started:**
+    -   Added prerequisites (Android Studio, Kotlin, JDK, iOS tools).
+    -   Included installation steps (clone, API key config, Android Studio setup).
+    -   Provided instructions for running on Android and iOS.
+    -   Added build commands.
+-   **App Flow & Navigation:**
+    -   Outlined main navigation structure.
+    -   Described screen interactions.
+    -   Explained state management approach.
+-   **Configuration & Customization:**
+    -   Listed pre-configured calendar categories.
+    -   Detailed holiday integration (India support, API key, fallback data).
+    -   Described event features (reminders, recurring events, location, all-day).
+-   **Testing:** Briefly mentioned testing infrastructure.
+-   **Performance Features:** Highlighted lazy loading, state optimization, flow management, and memory management.
+-   **Future Enhancements:** Added a list of potential future features.
+-   **Contributing:** Added a section for contributions with development guidelines and API integration notes.
+-   **License:** Included a link to the LICENSE file.
+-   **Acknowledgments:** Credited Kotlin Multiplatform, Compose Multiplatform, Room, and Koin.
+-   **Footer:** Added a project tagline.
