@@ -1,34 +1,12 @@
-docs: update README with detailed project information
+docs: add screenshots and demo gifs to README
 
-This commit significantly expands the README.md file to provide a comprehensive overview of the XCalendar project.
+This commit updates the `README.md` file to include a comprehensive "Screenshots & Demo" section.
 
-**Key Additions:**
+This new section showcases the application's user interface and functionality on both Android and iOS platforms using embedded images and GIFs. It is organized into the following categories:
 
--   **Project Introduction:** Added "What is XCalendar?" section.
--   **Key Features:** Detailed list of features including multiple calendar views, event management, calendar integration, holiday support, and modern UI/UX.
--   **Architecture & Technical Stack:**
-    -   Listed technology stack (Compose Multiplatform, Kotlin Multiplatform, Room, Koin, Ktor, etc.).
-    -   Provided a project structure overview.
-    -   Described data models (Event, Calendar, User, Holiday).
-    -   Explained data sources (static, dynamic, local, API).
-    -   Highlighted key components (SwipeableCalendarView, BaseCalendarScreen, etc.).
--   **Getting Started:**
-    -   Added prerequisites (Android Studio, Kotlin, JDK, iOS tools).
-    -   Included installation steps (clone, API key config, Android Studio setup).
-    -   Provided instructions for running on Android and iOS.
-    -   Added build commands.
--   **App Flow & Navigation:**
-    -   Outlined main navigation structure.
-    -   Described screen interactions.
-    -   Explained state management approach.
--   **Configuration & Customization:**
-    -   Listed pre-configured calendar categories.
-    -   Detailed holiday integration (India support, API key, fallback data).
-    -   Described event features (reminders, recurring events, location, all-day).
--   **Testing:** Briefly mentioned testing infrastructure.
--   **Performance Features:** Highlighted lazy loading, state optimization, flow management, and memory management.
--   **Future Enhancements:** Added a list of potential future features.
--   **Contributing:** Added a section for contributions with development guidelines and API integration notes.
--   **License:** Included a link to the LICENSE file.
--   **Acknowledgments:** Credited Kotlin Multiplatform, Compose Multiplatform, Room, and Koin.
--   **Footer:** Added a project tagline.
+-   **App Overview:** Provides general demo GIFs for both platforms.
+-   **Calendar Views:** Displays screenshots of Month, Week, Day, 3-Day, and Schedule views.
+-   **Event Management:** Shows screenshots for adding and viewing events.
+-   **Navigation & UI:** Includes screenshots of the App Bar and Sidebar.
+
+All images are sourced from the `assets/screenshots/` directory within the project's GitHub repository.
